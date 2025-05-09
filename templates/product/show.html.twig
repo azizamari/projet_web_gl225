@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('app_products') }}">Products</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+            </ol>
+        </nav>
+        
+        <div class="row">
+            <div class="col-md-5 mb-4">
+                {% if product.imageFilename %}
+                    <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" class="img-fluid rounded" alt="{{ product.name }}">
+                {% else %}
+                    <div class="text-center p-5 bg-light rounded">
+                        <i class="bi bi-disc-fill" style="font-size: 8rem;"></i>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="col-md-7">
+                <h1 class="mb-2">{{ product.name }}</h1>
+                
+                {% if product.artist %}
+                    <h4 class="text-muted">{{ product.artist }}</h4>
+                {% endif %}
+                
+                <div class="mb-3">
+                    {% if product.genre %}
+                        <span class="badge bg-secondary">{{ product.genre }}</span>
+                    {% endif %}
+                    {% if product.releaseYear %}
+                        <span class="badge bg-info text-dark">{{ product.releaseYear }}</span>
+                    {% endif %}
+                </div>
+                
+                <h3 class="mb-3">€{{ product.price|number_format(2, '.', ',') }}</h3>
+                
+                <div class="mb-4">
+                    {% if product.stock > 0 %}
+                        <span class="badge bg-success">In Stock ({{ product.stock }} available)</span>
+                    {% else %}
+                        <span class="badge bg-danger">Out of Stock</span>
+                    {% endif %}
+                </div>
+                
+                {% if product.description %}
+                    <div class="mb-4">
+                        <h5>Description</h5>
+                        <p>{{ product.description|nl2br }}</p>
+                    </div>
+                {% endif %}
+                
+                <form action="{{ path('app_cart_add', {'id': product.id}) }}" method="get" class="d-flex align-items-center mb-4">
+                    <div class="input-group me-3" style="width: 120px;">
+                        <button class="btn btn-outline-secondary" type="button" id="decrementQuantity">-</button>
+                        <input type="number" name="quantity" class="form-control text-center" value="1" min="1" max="{{ product.stock }}" id="quantityInput" {% if product.stock <= 0 %}disabled{% endif %}>
+                        <button class="btn btn-outline-secondary" type="button" id="incrementQuantity">+</button>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" {% if product.stock <= 0 %}disabled{% endif %}>
+                        <i class="bi bi-cart-plus"></i> Add to Cart
+                    </button>
+                </form>
+                
+                <div class="d-flex mb-4">
+                    <div class="me-4">
+                        <i class="bi bi-truck"></i> Free shipping on orders over €75
+                    </div>
+                    <div>
+                        <i class="bi bi-arrow-return-left"></i> 30-day return policy
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="mb-4">You might also like</h3>
+                <!-- Here you would typically display related products -->
+                <div class="alert alert-info">
+                    Related products feature coming soon!
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const decrementBtn = document.getElementById('decrementQuantity');
+            const incrementBtn = document.getElementById('incrementQuantity');
+            const quantityInput = document.getElementById('quantityInput');
+            const maxStock = {{ product.stock }};
+            
+            decrementBtn.addEventListener('click', function() {
+                let currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
+                }
+            });
+            
+            incrementBtn.addEventListener('click', function() {
+                let currentValue = parseInt(quantityInput.value);
+                if (currentValue < maxStock) {
+                    quantityInput.value = currentValue + 1;
+                }
+            });
+            
+            quantityInput.addEventListener('change', function() {
+                let currentValue = parseInt(quantityInput.value);
+                if (isNaN(currentValue) || currentValue < 1) {
+                    quantityInput.value = 1;
+                } else if (currentValue > maxStock) {
+                    quantityInput.value = maxStock;
+                }
+            });
+        });
+    </script>
+{% endblock %}

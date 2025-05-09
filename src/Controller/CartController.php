@@ -126,13 +126,22 @@ class CartController extends AbstractController
         if (!$user || $cartItem->getCart()->getUser()->getId() !== $user->getId()) {
             throw $this->createAccessDeniedException('You cannot modify this cart.');
         }
+
+        // Validate CSRF token
+        $token = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('update-item-' . $cartItem->getId(), $token)) {
+            $this->addFlash('error', 'Invalid form submission.');
+            return $this->redirectToRoute('app_cart');
+        }
         
         $quantity = (int) $request->request->get('quantity', 1);
         
         if ($quantity <= 0) {
             $entityManager->remove($cartItem);
+            $this->addFlash('success', 'Item removed from cart.');
         } else {
             $cartItem->setQuantity($quantity);
+            $this->addFlash('success', 'Cart updated successfully.');
         }
         
         $entityManager->flush();

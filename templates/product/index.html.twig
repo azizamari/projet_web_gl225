@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}All Vinyl Records{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="mb-4">Vinyl Records Collection</h1>
+        
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Filter Records</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6>Genres</h6>
+                        <div class="list-group mb-3">
+                            <a href="#" class="list-group-item list-group-item-action">Rock</a>
+                            <a href="#" class="list-group-item list-group-item-action">Jazz</a>
+                            <a href="#" class="list-group-item list-group-item-action">Blues</a>
+                            <a href="#" class="list-group-item list-group-item-action">Classical</a>
+                            <a href="#" class="list-group-item list-group-item-action">Electronic</a>
+                            <a href="#" class="list-group-item list-group-item-action">Hip Hop</a>
+                            <a href="#" class="list-group-item list-group-item-action">Pop</a>
+                        </div>
+                        
+                        <h6>Price Range</h6>
+                        <div class="range">
+                            <input type="range" class="form-range" min="0" max="200" step="10" id="priceRange">
+                            <div class="d-flex justify-content-between">
+                                <span>€0</span>
+                                <span>€100</span>
+                                <span>€200+</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-9">
+                {% if products|length > 0 %}
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                        {% for product in products %}
+                            <div class="col">
+                                <div class="card h-100 product-card">
+                                    {% if product.imageFilename %}
+                                        <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" class="card-img-top" alt="{{ product.name }}">
+                                    {% else %}
+                                        <div class="text-center p-5 bg-light">
+                                            <i class="bi bi-disc-fill" style="font-size: 4rem;"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ product.name }}</h5>
+                                        {% if product.artist %}
+                                            <p class="card-text text-muted">{{ product.artist }}</p>
+                                        {% endif %}
+                                        {% if product.genre %}
+                                            <span class="badge bg-secondary">{{ product.genre }}</span>
+                                        {% endif %}
+                                        <p class="card-text fw-bold mt-2">€{{ product.price|number_format(2, '.', ',') }}</p>
+                                        <div class="d-flex justify-content-between">
+                                            <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-sm btn-outline-secondary">Details</a>
+                                            <a href="{{ path('app_cart_add', {'id': product.id}) }}" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-cart-plus"></i> Add to Cart
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        No products available at the moment. Check back soon!
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

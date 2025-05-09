@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vinyl Records Shop - Home{% endblock %}
+
+{% block body %}
+    <section class="hero mb-5">
+        <div class="px-4 py-5 my-5 text-center">
+            <h1 class="display-4 fw-bold">Discover the Magic of Vinyl</h1>
+            <div class="col-lg-6 mx-auto">
+                <p class="lead mb-4">Welcome to our premium vinyl record shop. Browse our extensive collection of classic and contemporary albums in stunning vinyl format.</p>
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <a href="{{ path('app_products') }}" class="btn btn-primary btn-lg px-4 gap-3">Shop Now</a>
+                    <a href="#featured" class="btn btn-outline-secondary btn-lg px-4">Featured Records</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="featured" class="mb-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Featured Vinyl Records</h2>
+            
+            {% if featuredProducts|length > 0 %}
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                    {% for product in featuredProducts %}
+                        <div class="col">
+                            <div class="card h-100 product-card">
+                                {% if product.imageFilename %}
+                                    <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" class="card-img-top" alt="{{ product.name }}">
+                                {% else %}
+                                    <div class="text-center p-5 bg-light">
+                                        <i class="bi bi-disc-fill" style="font-size: 4rem;"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ product.name }}</h5>
+                                    {% if product.artist %}
+                                        <p class="card-text text-muted">{{ product.artist }}</p>
+                                    {% endif %}
+                                    <p class="card-text fw-bold">€{{ product.price|number_format(2, '.', ',') }}</p>
+                                    <div class="d-flex justify-content-between">
+                                        <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-sm btn-outline-secondary">Details</a>
+                                        <a href="{{ path('app_cart_add', {'id': product.id}) }}" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-cart-plus"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    No featured products available at the moment. Check back soon!
+                </div>
+            {% endif %}
+            
+            <div class="text-center mt-4">
+                <a href="{{ path('app_products') }}" class="btn btn-outline-primary">View All Records</a>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}
