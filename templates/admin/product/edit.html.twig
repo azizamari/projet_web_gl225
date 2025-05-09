@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Product{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('app_admin_products') }}">Product Management</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit Product</li>
+            </ol>
+        </nav>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="mb-0">Edit Product: {{ product.name }}</h3>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form) }}
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    {{ form_row(form.name) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(form.artist) }}
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    {{ form_row(form.price) }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form_row(form.stock) }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form_row(form.genre) }}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form_row(form.releaseYear) }}
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form_row(form.description) }}
+                            </div>
+                            
+                            <div class="mb-3">
+                                {% if product.imageFilename %}
+                                    <div class="mb-2">
+                                        <p>Current image:</p>
+                                        <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" alt="{{ product.name }}" class="img-thumbnail" style="max-width: 200px;">
+                                    </div>
+                                {% endif %}
+                                
+                                {{ form_row(form.imageFile) }}
+                                <small class="form-text text-muted">Upload a new image to replace the current one. Leave empty to keep the current image.</small>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ path('app_admin_products') }}" class="btn btn-outline-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Update Product</button>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
