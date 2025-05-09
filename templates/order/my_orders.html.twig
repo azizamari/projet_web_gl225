@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="mb-4">My Orders</h1>
+        
+        {% if orders|length > 0 %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Order Reference</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td>{{ order.reference }}</td>
+                                <td>{{ order.createdAt|date('Y-m-d H:i') }}</td>
+                                <td>
+                                    <span class="badge {% if order.status == 'pending' %}bg-warning{% elseif order.status == 'paid' %}bg-info{% elseif order.status == 'shipped' %}bg-primary{% elseif order.status == 'delivered' %}bg-success{% else %}bg-danger{% endif %}">
+                                        {{ order.status|capitalize }}
+                                    </span>
+                                </td>
+                                <td>€{{ order.totalPrice|number_format(2, '.', ',') }}</td>
+                                <td>
+                                    <a href="{{ path('app_order_details', {'reference': order.reference}) }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-bag-x" style="font-size: 4rem;"></i>
+                <h3 class="mt-3">No orders yet</h3>
+                <p>You haven't placed any orders yet.</p>
+                <a href="{{ path('app_products') }}" class="btn btn-primary mt-3">Start Shopping</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

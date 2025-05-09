@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Order Details{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('app_my_orders') }}">My Orders</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Order {{ order.reference }}</li>
+            </ol>
+        </nav>
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Order Details</h1>
+            <span class="badge {% if order.status == 'pending' %}bg-warning{% elseif order.status == 'paid' %}bg-info{% elseif order.status == 'shipped' %}bg-primary{% elseif order.status == 'delivered' %}bg-success{% else %}bg-danger{% endif %} fs-5">
+                {{ order.status|capitalize }}
+            </span>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Order Items</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th class="text-end">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in order.orderItems %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="flex-shrink-0" style="width: 60px;">
+                                                        {% if item.product.imageFilename %}
+                                                            <img src="{{ asset('uploads/products/' ~ item.product.imageFilename) }}" alt="{{ item.product.name }}" class="img-fluid rounded">
+                                                        {% else %}
+                                                            <div class="text-center p-2 bg-light rounded">
+                                                                <i class="bi bi-disc" style="font-size: 1.5rem;"></i>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="ms-3">
+                                                        <h6 class="mb-0">{{ item.product.name }}</h6>
+                                                        {% if item.product.artist %}
+                                                            <p class="small text-muted mb-0">{{ item.product.artist }}</p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>€{{ item.price|number_format(2, '.', ',') }}</td>
+                                            <td>{{ item.quantity }}</td>
+                                            <td class="text-end">€{{ item.subtotal|number_format(2, '.', ',') }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="3" class="text-end">Total:</th>
+                                        <th class="text-end">€{{ order.totalPrice|number_format(2, '.', ',') }}</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Order Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Order Reference:</strong> {{ order.reference }}</p>
+                        <p><strong>Order Date:</strong> {{ order.createdAt|date('F d, Y H:i') }}</p>
+                        <p><strong>Status:</strong> {{ order.status|capitalize }}</p>
+                        <p><strong>Payment Method:</strong> {{ order.paymentMethod|capitalize }}</p>
+                    </div>
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Shipping Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Name:</strong> {{ order.user.fullName }}</p>
+                        <p><strong>Address:</strong></p>
+                        <p class="mb-0">{{ order.shippingAddress|nl2br }}</p>
+                    </div>
+                </div>
+                
+                <div class="d-grid">
+                    <a href="{{ path('app_my_orders') }}" class="btn btn-outline-secondary">Back to My Orders</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
