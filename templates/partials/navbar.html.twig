@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg" style="background-color: var(--primary-black); color: var(--primary-light);">
     <div class="container">
-        <a class="navbar-brand" href="{{ path('app_home') }}">
+        <a class="navbar-brand text-white" href="{{ path('app_home') }}">
             <span class="record-icon"><i class="bi bi-disc"></i></span> <span>Vinyl Records Shop</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -9,18 +9,18 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link {% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}" href="{{ path('app_home') }}">Home</a>
+                    <a class="nav-link text-white {% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}" href="{{ path('app_home') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if app.request.attributes.get('_route') starts with 'app_products' and not app.request.attributes.get('_route') starts with 'app_admin_products' %}active{% endif %}" href="{{ path('app_products') }}">Shop</a>
+                    <a class="nav-link text-white {% if app.request.attributes.get('_route') starts with 'app_products' and not app.request.attributes.get('_route') starts with 'app_admin_products' %}active{% endif %}" href="{{ path('app_products') }}">Shop</a>
                 </li>
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle {% if app.request.attributes.get('_route') starts with 'app_admin' %}active{% endif %}" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link text-white dropdown-toggle {% if app.request.attributes.get('_route') starts with 'app_admin' %}active{% endif %}" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Admin
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                            <li><a class="dropdown-item" href="{{ path('app_admin_products') }}">Manage Products</a></li>
+                            <li><a class="dropdown-item" style="color: var(--primary-black);" href="{{ path('app_admin_products') }}">Manage Products</a></li>
                         </ul>
                     </li>
                 {% endif %}
@@ -28,26 +28,26 @@
             <ul class="navbar-nav">
                 {% if app.user %}
                     <li class="nav-item">
-                        <a class="nav-link {% if app.request.attributes.get('_route') starts with 'app_cart' %}active{% endif %}" href="{{ path('app_cart') }}">
+                        <a class="nav-link text-white {% if app.request.attributes.get('_route') starts with 'app_cart' %}active{% endif %}" href="{{ path('app_cart') }}">
                             <i class="bi bi-cart"></i> Cart
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link text-white dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-person-circle"></i> {{ app.user.firstName }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="{{ path('app_my_orders') }}">My Orders</a></li>
+                            <li><a class="dropdown-item" style="color: var(--primary-black);" href="{{ path('app_my_orders') }}">My Orders</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ path('app_logout') }}">Logout</a></li>
+                            <li><a class="dropdown-item" style="color: var(--primary-black);" href="{{ path('app_logout') }}">Logout</a></li>
                         </ul>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link {% if app.request.attributes.get('_route') == 'app_login' %}active{% endif %}" href="{{ path('app_login') }}">Login</a>
+                        <a class="nav-link text-white {% if app.request.attributes.get('_route') == 'app_login' %}active{% endif %}" href="{{ path('app_login') }}">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if app.request.attributes.get('_route') == 'app_register' %}active{% endif %}" href="{{ path('app_register') }}">Register</a>
+                        <a class="nav-link text-white {% if app.request.attributes.get('_route') == 'app_register' %}active{% endif %}" href="{{ path('app_register') }}">Register</a>
                     </li>
                 {% endif %}
             </ul>

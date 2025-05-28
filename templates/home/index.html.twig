@@ -3,14 +3,24 @@
 {% block title %}Vinyl Records Shop - Home{% endblock %}
 
 {% block body %}
-    <section class="hero mb-5">
-        <div class="px-4 py-5 my-5 text-center">
-            <h1 class="display-4 fw-bold">Discover the Magic of Vinyl</h1>
-            <div class="col-lg-6 mx-auto">
-                <p class="lead mb-4">Welcome to our premium vinyl record shop. Browse our extensive collection of classic and contemporary albums in stunning vinyl format.</p>
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                    <a href="{{ path('app_products') }}" class="btn btn-primary btn-lg px-4 gap-3">Shop Now</a>
-                    <a href="#featured" class="btn btn-outline-secondary btn-lg px-4">Featured Records</a>
+    <section class="hero mb-5" style="background-color: var(--primary-beige); border-radius: 8px; overflow: hidden;">
+        <div class="container">
+            <div class="row align-items-center py-5">
+                <div class="col-lg-6 py-5 px-4">
+                    <h1 class="display-4 fw-bold mb-4" style="color: var(--primary-black); font-family: 'Playfair Display', serif;">Discover the Magic of Vinyl</h1>
+                    <p class="lead mb-4" style="color: var(--primary-black); font-weight: 300;">Welcome to our premium vinyl record shop where music comes alive. Browse our extensive collection of classic and contemporary albums in stunning vinyl format.</p>
+                    <div class="d-grid gap-3 d-sm-flex">
+                        <a href="{{ path('app_products') }}" class="btn btn-lg px-4" style="background-color: var(--primary-black); color: white; border: none;">Shop Now</a>
+                        <a href="#featured" class="btn btn-outline-dark btn-lg px-4">Featured Records</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block">
+                    <div class="position-relative">
+                        <div class="position-absolute top-50 start-50 translate-middle" style="width: 300px; height: 300px; background-color: var(--primary-beige-dark); border-radius: 50%; z-index: 1;"></div>
+                        <div class="position-relative" style="z-index: 2;">
+                            <i class="bi bi-disc-fill" style="font-size: 280px; color: var(--primary-black); display: block; margin: 0 auto; animation: spin 20s linear infinite;"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -18,7 +28,11 @@
 
     <section id="featured" class="mb-5">
         <div class="container">
-            <h2 class="text-center mb-4">Featured Vinyl Records</h2>
+            <div class="d-flex align-items-center mb-4">
+                <div style="flex-grow: 1; height: 1px; background-color: var(--primary-beige-dark);"></div>
+                <h2 class="text-center mx-4 mb-0" style="color: var(--primary-black); font-family: 'Playfair Display', serif;">Featured Vinyl Records</h2>
+                <div style="flex-grow: 1; height: 1px; background-color: var(--primary-beige-dark);"></div>
+            </div>
             
             {% if featuredProducts|length > 0 %}
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
@@ -28,19 +42,19 @@
                                 {% if product.imageFilename %}
                                     <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" class="card-img-top" alt="{{ product.name }}">
                                 {% else %}
-                                    <div class="text-center p-5 bg-light">
-                                        <i class="bi bi-disc-fill" style="font-size: 4rem;"></i>
+                                    <div class="text-center p-5" style="background-color: var(--primary-beige-light);">
+                                        <i class="bi bi-disc-fill" style="font-size: 4rem; color: var(--primary-black);"></i>
                                     </div>
                                 {% endif %}
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ product.name }}</h5>
+                                    <h5 class="card-title" style="font-family: 'Playfair Display', serif; font-weight: 700;">{{ product.name }}</h5>
                                     {% if product.artist %}
-                                        <p class="card-text text-muted">{{ product.artist }}</p>
+                                        <p class="card-text" style="color: #666;">{{ product.artist }}</p>
                                     {% endif %}
-                                    <p class="card-text fw-bold">€{{ product.price|number_format(2, '.', ',') }}</p>
-                                    <div class="d-flex justify-content-between">
-                                        <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-sm btn-outline-secondary">Details</a>
-                                        <a href="{{ path('app_cart_add', {'id': product.id}) }}" class="btn btn-sm btn-primary">
+                                    <p class="card-text fw-bold" style="color: var(--primary-black); font-size: 1.1rem;">€{{ product.price|number_format(2, '.', ',') }}</p>
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-sm" style="background-color: var(--primary-beige-light); color: var(--primary-black);">Details</a>
+                                        <a href="{{ path('app_cart_add', {'id': product.id}) }}" class="btn btn-sm" style="background-color: var(--primary-black); color: white;">
                                             <i class="bi bi-cart-plus"></i> Add to Cart
                                         </a>
                                     </div>
@@ -55,8 +69,8 @@
                 </div>
             {% endif %}
             
-            <div class="text-center mt-4">
-                <a href="{{ path('app_products') }}" class="btn btn-outline-primary">View All Records</a>
+            <div class="text-center mt-5">
+                <a href="{{ path('app_products') }}" class="btn btn-lg" style="background-color: var(--primary-beige); color: var(--primary-black); border: none; padding: 0.75rem 2rem;">View All Records</a>
             </div>
         </div>
     </section>

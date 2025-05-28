@@ -4,18 +4,22 @@
 
 {% block body %}
     <div class="container">
-        <h1 class="mb-4">Your Shopping Cart</h1>
+        <div class="d-flex align-items-center mb-4 mt-3">
+            <div style="flex-grow: 1; height: 1px; background-color: var(--primary-beige-dark);"></div>
+            <h1 class="mx-4 mb-0" style="color: var(--primary-black); font-family: 'Playfair Display', serif;">Your Shopping Cart</h1>
+            <div style="flex-grow: 1; height: 1px; background-color: var(--primary-beige-dark);"></div>
+        </div>
         
         {% if cart is not null and cart.cartItems is defined and cart.cartItems.count > 0 %}
             <div class="row">
                 <div class="col-lg-8">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Cart Items</h5>
+                    <div class="card mb-4" style="border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                        <div class="card-header" style="background-color: var(--primary-beige); border: none;">
+                            <h5 class="mb-0" style="color: var(--primary-black); font-family: 'Playfair Display', serif;">Cart Items</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-hover">
+                                <table class="table table-hover" style="color: var(--primary-black);">
                                     <thead>
                                         <tr>
                                             <th scope="col">Product</th>
@@ -34,14 +38,14 @@
                                                             {% if item.product.imageFilename %}
                                                                 <img src="{{ asset('uploads/products/' ~ item.product.imageFilename) }}" alt="{{ item.product.name }}" class="img-fluid rounded">
                                                             {% else %}
-                                                                <div class="text-center p-2 bg-light rounded">
-                                                                    <i class="bi bi-disc" style="font-size: 1.5rem;"></i>
+                                                                <div class="text-center p-2 rounded" style="background-color: var(--primary-beige-light);">
+                                                                    <i class="bi bi-disc" style="font-size: 1.5rem; color: var(--primary-black);"></i>
                                                                 </div>
                                                             {% endif %}
                                                         </div>
                                                         <div class="ms-3">
                                                             <a href="{{ path('app_product_show', {'id': item.product.id}) }}" class="text-decoration-none">
-                                                                <h6 class="mb-0">{{ item.product.name }}</h6>
+                                                                <h6 class="mb-0" style="font-family: 'Playfair Display', serif; color: var(--primary-black);">{{ item.product.name }}</h6>
                                                             </a>
                                                             {% if item.product.artist %}
                                                                 <p class="small text-muted mb-0">{{ item.product.artist }}</p>
@@ -54,16 +58,16 @@
                                                     <form action="{{ path('app_cart_update', {'id': item.id}) }}" method="post" class="quantity-form">
                                                         <input type="hidden" name="_token" value="{{ csrf_token('update-item-' ~ item.id) }}">
                                                         <div class="input-group input-group-sm" style="width: 100px;">
-                                                            <button class="btn btn-outline-secondary decrement-qty" type="button">-</button>
-                                                            <input type="number" name="quantity" class="form-control text-center" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}">
-                                                            <button class="btn btn-outline-secondary increment-qty" type="button">+</button>
+                                                            <button class="btn decrement-qty" type="button" style="border: 1px solid var(--primary-beige); color: var(--primary-black);">-</button>
+                                                            <input type="number" name="quantity" class="form-control text-center" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" style="border: 1px solid var(--primary-beige);">
+                                                            <button class="btn increment-qty" type="button" style="border: 1px solid var(--primary-beige); color: var(--primary-black);">+</button>
                                                             <button type="submit" class="d-none">Update</button>
                                                         </div>
                                                     </form>
                                                 </td>
                                                 <td>€{{ item.subtotal|number_format(2, '.', ',') }}</td>
                                                 <td>
-                                                    <a href="{{ path('app_cart_remove', {'id': item.id}) }}" class="btn btn-sm btn-outline-danger">
+                                                    <a href="{{ path('app_cart_remove', {'id': item.id}) }}" class="btn btn-sm" style="border: 1px solid #dc3545; color: #dc3545;">
                                                         <i class="bi bi-trash"></i>
                                                     </a>
                                                 </td>
@@ -77,9 +81,9 @@
                 </div>
                 
                 <div class="col-lg-4">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Order Summary</h5>
+                    <div class="card mb-4" style="border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                        <div class="card-header" style="background-color: var(--primary-beige); border: none;">
+                            <h5 class="mb-0" style="color: var(--primary-black); font-family: 'Playfair Display', serif;">Order Summary</h5>
                         </div>
                         <div class="card-body">
                             <div class="d-flex justify-content-between mb-3">
@@ -97,8 +101,8 @@
                             </div>
                             
                             <div class="d-grid gap-2">
-                                <a href="{{ path('app_cart_checkout') }}" class="btn btn-primary">Proceed to Checkout</a>
-                                <a href="{{ path('app_products') }}" class="btn btn-outline-secondary">Continue Shopping</a>
+                                <a href="{{ path('app_cart_checkout') }}" class="btn" style="background-color: var(--primary-black); color: white; border: none;">Proceed to Checkout</a>
+                                <a href="{{ path('app_products') }}" class="btn" style="background-color: var(--primary-beige); color: var(--primary-black); border: none; margin-top: 8px;">Continue Shopping</a>
                             </div>
                         </div>
                     </div>
@@ -106,10 +110,10 @@
             </div>
         {% else %}
             <div class="text-center py-5">
-                <i class="bi bi-cart-x" style="font-size: 4rem;"></i>
+                <i class="bi bi-cart-x" style="font-size: 4rem; color: var(--primary-beige-dark);"></i>
                 <h3 class="mt-3">Your cart is empty</h3>
                 <p>Looks like you haven't added any items to your cart yet.</p>
-                <a href="{{ path('app_products') }}" class="btn btn-primary mt-3">Start Shopping</a>
+                <a href="{{ path('app_products') }}" class="btn mt-3" style="background-color: var(--primary-black); color: white; border: none; padding: 10px 24px;">Start Shopping</a>
             </div>
         {% endif %}
     </div>

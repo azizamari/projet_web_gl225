@@ -6,9 +6,9 @@
     <div class="container">
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ path('app_products') }}">Products</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+                <li class="breadcrumb-item"><a href="{{ path('app_home') }}" style="color: var(--primary-black); text-decoration: none;">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('app_products') }}" style="color: var(--primary-black); text-decoration: none;">Products</a></li>
+                <li class="breadcrumb-item active" aria-current="page" style="color: #666;">{{ product.name }}</li>
             </ol>
         </nav>
         
@@ -17,8 +17,8 @@
                 {% if product.imageFilename %}
                     <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" class="img-fluid rounded" alt="{{ product.name }}">
                 {% else %}
-                    <div class="text-center p-5 bg-light rounded">
-                        <i class="bi bi-disc-fill" style="font-size: 8rem;"></i>
+                    <div class="text-center p-5 rounded" style="background-color: var(--primary-beige-light);">
+                        <i class="bi bi-disc-fill" style="font-size: 8rem; color: var(--primary-black);"></i>
                     </div>
                 {% endif %}
             </div>
@@ -32,10 +32,10 @@
                 
                 <div class="mb-3">
                     {% if product.genre %}
-                        <span class="badge bg-secondary">{{ product.genre }}</span>
+                        <span class="badge" style="background-color: var(--primary-beige); color: var(--primary-black);">{{ product.genre }}</span>
                     {% endif %}
                     {% if product.releaseYear %}
-                        <span class="badge bg-info text-dark">{{ product.releaseYear }}</span>
+                        <span class="badge" style="background-color: var(--primary-beige-light); color: var(--primary-black);">{{ product.releaseYear }}</span>
                     {% endif %}
                 </div>
                 
@@ -43,9 +43,9 @@
                 
                 <div class="mb-4">
                     {% if product.stock > 0 %}
-                        <span class="badge bg-success">In Stock ({{ product.stock }} available)</span>
+                        <span class="badge" style="background-color: #d4e6d9; color: #0f5132;">In Stock ({{ product.stock }} available)</span>
                     {% else %}
-                        <span class="badge bg-danger">Out of Stock</span>
+                        <span class="badge" style="background-color: #f8d7da; color: #842029;">Out of Stock</span>
                     {% endif %}
                 </div>
                 
@@ -58,12 +58,12 @@
                 
                 <form action="{{ path('app_cart_add', {'id': product.id}) }}" method="get" class="d-flex align-items-center mb-4">
                     <div class="input-group me-3" style="width: 120px;">
-                        <button class="btn btn-outline-secondary" type="button" id="decrementQuantity">-</button>
-                        <input type="number" name="quantity" class="form-control text-center" value="1" min="1" max="{{ product.stock }}" id="quantityInput" {% if product.stock <= 0 %}disabled{% endif %}>
-                        <button class="btn btn-outline-secondary" type="button" id="incrementQuantity">+</button>
+                        <button class="btn" type="button" id="decrementQuantity" style="border: 1px solid var(--primary-beige); color: var(--primary-black);">-</button>
+                        <input type="number" name="quantity" class="form-control text-center" value="1" min="1" max="{{ product.stock }}" id="quantityInput" style="border: 1px solid var(--primary-beige);" {% if product.stock <= 0 %}disabled{% endif %}>
+                        <button class="btn" type="button" id="incrementQuantity" style="border: 1px solid var(--primary-beige); color: var(--primary-black);">+</button>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary" {% if product.stock <= 0 %}disabled{% endif %}>
+                    <button type="submit" class="btn" style="background-color: var(--primary-black); color: white; border: none;" {% if product.stock <= 0 %}disabled{% endif %}>
                         <i class="bi bi-cart-plus"></i> Add to Cart
                     </button>
                 </form>
@@ -81,9 +81,13 @@
         
         <div class="row mt-5">
             <div class="col-12">
-                <h3 class="mb-4">You might also like</h3>
+                <div class="d-flex align-items-center mb-4">
+                    <div style="flex-grow: 1; height: 1px; background-color: var(--primary-beige-dark);"></div>
+                    <h3 class="mx-4 mb-0" style="color: var(--primary-black); font-family: 'Playfair Display', serif;">You might also like</h3>
+                    <div style="flex-grow: 1; height: 1px; background-color: var(--primary-beige-dark);"></div>
+                </div>
                 <!-- Here you would typically display related products -->
-                <div class="alert alert-info">
+                <div class="alert" style="background-color: var(--primary-beige-light); color: var(--primary-black); border: none;">
                     Related products feature coming soon!
                 </div>
             </div>

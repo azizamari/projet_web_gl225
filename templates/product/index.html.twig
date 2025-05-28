@@ -4,27 +4,31 @@
 
 {% block body %}
     <div class="container">
-        <h1 class="mb-4">Vinyl Records Collection</h1>
+        <div class="d-flex align-items-center mb-4 mt-3">
+            <div style="flex-grow: 1; height: 1px; background-color: var(--primary-beige-dark);"></div>
+            <h1 class="mx-4 mb-0" style="color: var(--primary-black); font-family: 'Playfair Display', serif;">Vinyl Records Collection</h1>
+            <div style="flex-grow: 1; height: 1px; background-color: var(--primary-beige-dark);"></div>
+        </div>
         
         <div class="row mb-4">
             <div class="col-md-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Filter Records</h5>
+                <div class="card" style="border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                    <div class="card-header" style="background-color: var(--primary-beige); border: none;">
+                        <h5 class="mb-0" style="color: var(--primary-black); font-family: 'Playfair Display', serif;">Filter Records</h5>
                     </div>
                     <div class="card-body">
-                        <h6>Genres</h6>
+                        <h6 style="font-family: 'Playfair Display', serif; color: var(--primary-black);">Genres</h6>
                         <div class="list-group mb-3">
-                            <a href="#" class="list-group-item list-group-item-action">Rock</a>
-                            <a href="#" class="list-group-item list-group-item-action">Jazz</a>
-                            <a href="#" class="list-group-item list-group-item-action">Blues</a>
-                            <a href="#" class="list-group-item list-group-item-action">Classical</a>
-                            <a href="#" class="list-group-item list-group-item-action">Electronic</a>
-                            <a href="#" class="list-group-item list-group-item-action">Hip Hop</a>
-                            <a href="#" class="list-group-item list-group-item-action">Pop</a>
+                            <a href="#" class="list-group-item list-group-item-action border-0 mb-1" style="background-color: var(--primary-beige-light); color: var(--primary-black); border-radius: 4px;">Rock</a>
+                            <a href="#" class="list-group-item list-group-item-action border-0 mb-1" style="background-color: var(--primary-beige-light); color: var(--primary-black); border-radius: 4px;">Jazz</a>
+                            <a href="#" class="list-group-item list-group-item-action border-0 mb-1" style="background-color: var(--primary-beige-light); color: var(--primary-black); border-radius: 4px;">Blues</a>
+                            <a href="#" class="list-group-item list-group-item-action border-0 mb-1" style="background-color: var(--primary-beige-light); color: var(--primary-black); border-radius: 4px;">Classical</a>
+                            <a href="#" class="list-group-item list-group-item-action border-0 mb-1" style="background-color: var(--primary-beige-light); color: var(--primary-black); border-radius: 4px;">Electronic</a>
+                            <a href="#" class="list-group-item list-group-item-action border-0 mb-1" style="background-color: var(--primary-beige-light); color: var(--primary-black); border-radius: 4px;">Hip Hop</a>
+                            <a href="#" class="list-group-item list-group-item-action border-0 mb-1" style="background-color: var(--primary-beige-light); color: var(--primary-black); border-radius: 4px;">Pop</a>
                         </div>
                         
-                        <h6>Price Range</h6>
+                        <h6 style="font-family: 'Playfair Display', serif; color: var(--primary-black);">Price Range</h6>
                         <div class="range">
                             <input type="range" class="form-range" min="0" max="200" step="10" id="priceRange">
                             <div class="d-flex justify-content-between">
@@ -46,23 +50,23 @@
                                     {% if product.imageFilename %}
                                         <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" class="card-img-top" alt="{{ product.name }}">
                                     {% else %}
-                                        <div class="text-center p-5 bg-light">
-                                            <i class="bi bi-disc-fill" style="font-size: 4rem;"></i>
+                                        <div class="text-center p-5" style="background-color: var(--primary-beige-light);">
+                                            <i class="bi bi-disc-fill" style="font-size: 4rem; color: var(--primary-black);"></i>
                                         </div>
                                     {% endif %}
                                     <div class="card-body">
-                                        <h5 class="card-title">{{ product.name }}</h5>
+                                        <h5 class="card-title" style="font-family: 'Playfair Display', serif; font-weight: 700;">{{ product.name }}</h5>
                                         {% if product.artist %}
-                                            <p class="card-text text-muted">{{ product.artist }}</p>
+                                            <p class="card-text" style="color: #666;">{{ product.artist }}</p>
                                         {% endif %}
                                         {% if product.genre %}
                                             <span class="badge bg-secondary">{{ product.genre }}</span>
                                         {% endif %}
-                                        <p class="card-text fw-bold mt-2">€{{ product.price|number_format(2, '.', ',') }}</p>
-                                        <div class="d-flex justify-content-between">
-                                            <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-sm btn-outline-secondary">Details</a>
-                                            <a href="{{ path('app_cart_add', {'id': product.id}) }}" class="btn btn-sm btn-primary">
-                                                <i class="bi bi-cart-plus"></i> Add to Cart
+                                        <p class="card-text fw-bold" style="color: var(--primary-black); font-size: 1.1rem;">€{{ product.price|number_format(2, '.', ',') }}</p>
+                                        <div class="d-flex justify-content-between align-items-center mt-3">
+                                            <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-sm" style="background-color: var(--primary-beige-light); color: var(--primary-black);">Details</a>
+                                            <a href="{{ path('app_cart_add', {'id': product.id}) }}" class="btn btn-sm" style="background-color: var(--primary-black); color: white;">
+                                                <i class="bi bi-cart-plus"></i> Add
                                             </a>
                                         </div>
                                     </div>

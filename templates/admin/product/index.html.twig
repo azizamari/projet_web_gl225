@@ -4,15 +4,20 @@
 
 {% block body %}
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Product Management</h1>
-            <a href="{{ path('app_admin_product_new') }}" class="btn btn-primary">
+        <div class="d-flex align-items-center mb-4 mt-3">
+            <div style="flex-grow: 1; height: 1px; background-color: var(--primary-beige-dark);"></div>
+            <h1 class="mx-4 mb-0" style="color: var(--primary-black); font-family: 'Playfair Display', serif;">Product Management</h1>
+            <div style="flex-grow: 1; height: 1px; background-color: var(--primary-beige-dark);"></div>
+        </div>
+        
+        <div class="d-flex justify-content-end mb-4">
+            <a href="{{ path('app_admin_product_new') }}" class="btn" style="background-color: var(--primary-black); color: white; border: none;">
                 <i class="bi bi-plus-circle"></i> Add New Product
             </a>
         </div>
         
         {% if products|length > 0 %}
-            <div class="card">
+            <div class="card" style="border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover">
@@ -35,8 +40,8 @@
                                             {% if product.imageFilename %}
                                                 <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" alt="{{ product.name }}" class="img-fluid rounded">
                                             {% else %}
-                                                <div class="text-center p-2 bg-light rounded">
-                                                    <i class="bi bi-disc" style="font-size: 1.5rem;"></i>
+                                                <div class="text-center p-2 rounded" style="background-color: var(--primary-beige-light);">
+                                                    <i class="bi bi-disc" style="font-size: 1.5rem; color: var(--primary-black);"></i>
                                                 </div>
                                             {% endif %}
                                         </td>
@@ -44,35 +49,37 @@
                                         <td>{{ product.artist }}</td>
                                         <td>€{{ product.price|number_format(2, '.', ',') }}</td>
                                         <td>
-                                            <span class="badge {% if product.stock > 10 %}bg-success{% elseif product.stock > 0 %}bg-warning{% else %}bg-danger{% endif %}">
+                                            <span class="badge" style="{% if product.stock > 10 %}background-color: #d4e6d9; color: #0f5132;{% elseif product.stock > 0 %}background-color: #fff3cd; color: #664d03;{% else %}background-color: #f8d7da; color: #842029;{% endif %}">
                                                 {{ product.stock }}
                                             </span>
                                         </td>
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-sm btn-outline-secondary">View</a>
-                                                <a href="{{ path('app_admin_product_edit', {'id': product.id}) }}" class="btn btn-sm btn-outline-primary">Edit</a>
-                                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ product.id }}">
-                                                    Delete
+                                                <a href="{{ path('app_admin_product_edit', {'id': product.id}) }}" class="btn btn-sm me-2" style="background-color: #d9d4c6; color: #18181b; border: none;">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-sm" style="background-color: #f8d7da; color: #842029; border: none;" data-bs-toggle="modal" data-bs-target="#deleteModal{{ product.id }}">
+                                                    <i class="bi bi-trash"></i>
                                                 </button>
                                             </div>
                                             
                                             <!-- Delete Modal -->
                                             <div class="modal fade" id="deleteModal{{ product.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ product.id }}" aria-hidden="true">
                                                 <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="deleteModalLabel{{ product.id }}">Confirm Deletion</h5>
+                                                    <div class="modal-content" style="border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                                                        <div class="modal-header" style="background-color: #d9d4c6; border-bottom: none;">
+                                                            <h5 class="modal-title" style="font-family: 'Playfair Display', serif; color: #18181b;">Confirm Delete</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             Are you sure you want to delete the product "{{ product.name }}"?
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn" data-bs-dismiss="modal" style="background-color: #d9d4c6; color: #18181b; border: none;">Cancel</button>
                                                             <form action="{{ path('app_admin_product_delete', {'id': product.id}) }}" method="post" style="display: inline;">
                                                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
-                                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                                <button type="submit" class="btn" style="background-color: #f8d7da; color: #842029; border: none;">Delete</button>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -87,8 +94,8 @@
                 </div>
             </div>
         {% else %}
-            <div class="alert alert-info">
-                <i class="bi bi-info-circle"></i> No products found. <a href="{{ path('app_admin_product_new') }}">Add your first product</a>.
+            <div class="alert" style="background-color: var(--primary-beige-light); color: var(--primary-black); border: none;">
+                <i class="bi bi-info-circle"></i> No products found. <a href="{{ path('app_admin_product_new') }}" style="color: var(--primary-black); text-decoration: underline;">Add your first product</a>.
             </div>
         {% endif %}
     </div>
