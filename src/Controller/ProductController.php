@@ -16,12 +16,41 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class ProductController extends AbstractController
 {
     #[Route('/products', name: 'app_products')]
-    public function index(ProductRepository $productRepository): Response
+    public function index(Request $request, ProductRepository $productRepository): Response
     {
-        $products = $productRepository->findBy([], ['createdAt' => 'DESC']);
+        // Get filters from request
+        $genres = $request->query->all('genres');
+        $priceRange = $request->query->get('price_range', 200);
+        $page = max(1, $request->query->getInt('page', 1));
+        
+        // Build filters array
+        $filters = [];
+        if (!empty($genres)) {
+            $filters['genres'] = $genres;
+        }
+        
+        // Handle price range
+        if ($priceRange < 200) {
+            $filters['max_price'] = (float)$priceRange;
+        }
+        
+        // Get all available genres for the filter checkboxes
+        $allGenres = $productRepository->findAllGenres();
+        
+        // Get paginated products based on filters
+        $pagination = $productRepository->findByFilters($filters, $page, 9);
+        
+        // Calculate total pages
+        $totalItems = count($pagination);
+        $totalPages = ceil($totalItems / 9);
         
         return $this->render('product/index.html.twig', [
-            'products' => $products,
+            'products' => $pagination,
+            'allGenres' => $allGenres,
+            'selectedGenres' => $genres,
+            'priceRange' => $priceRange,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
         ]);
     }
     
