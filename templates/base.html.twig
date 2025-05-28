@@ -26,6 +26,8 @@
                     font-family: 'Raleway', sans-serif;
                     color: var(--primary-black);
                     background-color: var(--primary-light);
+                    margin: 0;
+                    padding: 0;
                 }
                 
                 h1, h2, h3, h4, h5, h6 {
@@ -144,7 +146,7 @@
     <body>
         {% include 'partials/navbar.html.twig' %}
 
-        <div class="content-wrapper" style="background-color: var(--primary-light);">
+        <div class="content-wrapper" style="background-color: var(--primary-light); flex: 1 0 auto; width: 100%;">
             <div class="container mt-4 mb-4">
                 {% for label, messages in app.flashes %}
                     {% for message in messages %}
@@ -159,36 +161,55 @@
             </div>
         </div>
 
-        <footer class="footer">
+        <footer style="background-color: var(--primary-black); color: var(--primary-light); padding: 3rem 0 1.5rem;">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-4">
-                        <h5>Vinyl Records Shop</h5>
-                        <p>Your premier destination for vinyl records. Browse our extensive collection of classic and contemporary albums.</p>
+                <div class="d-flex align-items-center mb-4">
+                    <div style="flex-grow: 1; height: 1px; background-color: var(--primary-beige);"></div>
+                    <h3 class="mx-4 mb-0" style="color: var(--primary-beige); font-family: 'Playfair Display', serif;">Vinyl Records Shop</h3>
+                    <div style="flex-grow: 1; height: 1px; background-color: var(--primary-beige);"></div>
+                </div>
+                
+                <div class="row py-4">
+                    <div class="col-md-4 mb-4">
+                        <h5 style="font-family: 'Playfair Display', serif; color: var(--primary-beige);">About Us</h5>
+                        <p class="mt-3">Your premier destination for vinyl records. Browse our extensive collection of classic and contemporary albums, carefully curated for audiophiles and music lovers.</p>
+                        <div class="mt-3">
+                            <a href="#" class="me-2" style="color: var(--primary-beige);"><i class="bi bi-facebook fs-5"></i></a>
+                            <a href="#" class="me-2" style="color: var(--primary-beige);"><i class="bi bi-instagram fs-5"></i></a>
+                            <a href="#" class="me-2" style="color: var(--primary-beige);"><i class="bi bi-twitter-x fs-5"></i></a>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <h5>Quick Links</h5>
-                        <ul class="list-unstyled">
-                            <li><a href="{{ path('app_home') }}" class="text-decoration-none" style="color: var(--primary-light);">Home</a></li>
-                            <li><a href="{{ path('app_products') }}" class="text-decoration-none" style="color: var(--primary-light);">Products</a></li>
+                    <div class="col-md-4 mb-4">
+                        <h5 style="font-family: 'Playfair Display', serif; color: var(--primary-beige);">Quick Links</h5>
+                        <ul class="list-unstyled mt-3">
+                            <li class="mb-2"><a href="{{ path('app_home') }}" class="text-decoration-none" style="color: var(--primary-light);"><i class="bi bi-chevron-right me-1" style="color: var(--primary-beige);"></i> Home</a></li>
+                            <li class="mb-2"><a href="{{ path('app_products') }}" class="text-decoration-none" style="color: var(--primary-light);"><i class="bi bi-chevron-right me-1" style="color: var(--primary-beige);"></i> Products</a></li>
                             {% if app.user %}
-                                <li><a href="{{ path('app_cart') }}" class="text-decoration-none" style="color: var(--primary-light);">Cart</a></li>
-                                <li><a href="{{ path('app_my_orders') }}" class="text-decoration-none" style="color: var(--primary-light);">My Orders</a></li>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <li class="mb-2"><a href="{{ path('app_admin_products') }}" class="text-decoration-none" style="color: var(--primary-light);"><i class="bi bi-chevron-right me-1" style="color: var(--primary-beige);"></i> Manage Products</a></li>
+                                    <li class="mb-2"><a href="{{ path('app_admin_orders') }}" class="text-decoration-none" style="color: var(--primary-light);"><i class="bi bi-chevron-right me-1" style="color: var(--primary-beige);"></i> All Orders</a></li>
+                                {% else %}
+                                    <li class="mb-2"><a href="{{ path('app_cart') }}" class="text-decoration-none" style="color: var(--primary-light);"><i class="bi bi-chevron-right me-1" style="color: var(--primary-beige);"></i> Cart</a></li>
+                                    <li class="mb-2"><a href="{{ path('app_my_orders') }}" class="text-decoration-none" style="color: var(--primary-light);"><i class="bi bi-chevron-right me-1" style="color: var(--primary-beige);"></i> My Orders</a></li>
+                                {% endif %}
                             {% else %}
-                                <li><a href="{{ path('app_login') }}" class="text-decoration-none" style="color: var(--primary-light);">Login</a></li>
-                                <li><a href="{{ path('app_register') }}" class="text-decoration-none" style="color: var(--primary-light);">Register</a></li>
+                                <li class="mb-2"><a href="{{ path('app_login') }}" class="text-decoration-none" style="color: var(--primary-light);"><i class="bi bi-chevron-right me-1" style="color: var(--primary-beige);"></i> Login</a></li>
+                                <li class="mb-2"><a href="{{ path('app_register') }}" class="text-decoration-none" style="color: var(--primary-light);"><i class="bi bi-chevron-right me-1" style="color: var(--primary-beige);"></i> Register</a></li>
                             {% endif %}
                         </ul>
                     </div>
-                    <div class="col-md-4">
-                        <h5>Contact Us</h5>
-                        <p><i class="bi bi-envelope"></i> contact@vinylshop.com</p>
-                        <p><i class="bi bi-telephone"></i> +1 (555) 123-4567</p>
-                        <p><i class="bi bi-geo-alt"></i> 123 Music Street, Vinyl City</p>
+                    <div class="col-md-4 mb-4">
+                        <h5 style="font-family: 'Playfair Display', serif; color: var(--primary-beige);">Contact Us</h5>
+                        <ul class="list-unstyled mt-3">
+                            <li class="mb-2"><i class="bi bi-envelope me-2" style="color: var(--primary-beige);"></i> contact@vinylshop.com</li>
+                            <li class="mb-2"><i class="bi bi-telephone me-2" style="color: var(--primary-beige);"></i> +1 (555) 123-4567</li>
+                            <li class="mb-2"><i class="bi bi-geo-alt me-2" style="color: var(--primary-beige);"></i> 123 Music Street, Vinyl City</li>
+                        </ul>
                     </div>
                 </div>
-                <div class="text-center mt-3">
-                    <p>&copy; {{ 'now'|date('Y') }} Vinyl Records Shop. All rights reserved.</p>
+                <div style="height: 1px; background-color: var(--primary-beige-dark); opacity: 0.5;" class="mb-3"></div>
+                <div class="text-center py-3" style="color: var(--primary-light); opacity: 0.8;">
+                    <p class="mb-0">&copy; {{ 'now'|date('Y') }} Vinyl Records Shop. All rights reserved.</p>
                 </div>
             </div>
         </footer>
