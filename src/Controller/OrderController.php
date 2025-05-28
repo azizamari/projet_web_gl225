@@ -15,6 +15,45 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/order')]
 class OrderController extends AbstractController
 {
+    #[Route('/admin/orders', name: 'app_admin_orders')]
+    public function adminOrders(OrderRepository $orderRepository): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        
+        $orders = $orderRepository->findBy([], ['createdAt' => 'DESC']);
+        
+        return $this->render('admin/order/index.html.twig', [
+            'orders' => $orders,
+        ]);
+    }
+    
+    #[Route('/admin/order/{id}/status', name: 'app_admin_order_status_update', methods: ['POST'])]
+    public function updateOrderStatus(Order $order, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        
+        $status = $request->request->get('status');
+        
+        // Validate status
+        $validStatuses = [
+            Order::STATUS_PENDING,
+            Order::STATUS_PAID,
+            Order::STATUS_SHIPPED,
+            Order::STATUS_DELIVERED,
+            Order::STATUS_CANCELLED
+        ];
+        
+        if (!in_array($status, $validStatuses)) {
+            $this->addFlash('error', 'Invalid status');
+            return $this->redirectToRoute('app_admin_orders');
+        }
+        
+        $order->setStatus($status);
+        $entityManager->flush();
+        
+        $this->addFlash('success', 'Order status updated successfully');
+        return $this->redirectToRoute('app_admin_orders');
+    }
     #[Route('/create', name: 'app_order_create', methods: ['POST'])]
     public function create(
         Request $request,

@@ -1,0 +1,172 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin - Order Management{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="d-flex align-items-center mb-4 mt-3">
+            <div style="flex-grow: 1; height: 1px; background-color: var(--primary-beige-dark);"></div>
+            <h1 class="mx-4 mb-0" style="color: var(--primary-black); font-family: 'Playfair Display', serif;">Order Management</h1>
+            <div style="flex-grow: 1; height: 1px; background-color: var(--primary-beige-dark);"></div>
+        </div>
+        
+        {% if orders|length > 0 %}
+            <div class="card mb-4" style="border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Reference</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Items</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                    <tr>
+                                        <td>{{ order.reference }}</td>
+                                        <td>
+                                            {{ order.user.firstName }} {{ order.user.lastName }}<br>
+                                            <small class="text-muted">{{ order.user.email }}</small>
+                                        </td>
+                                        <td>{{ order.createdAt|date('d M Y, H:i') }}</td>
+                                        <td>{{ order.orderItems.count }}</td>
+                                        <td>€{{ order.totalPrice|number_format(2, '.', ',') }}</td>
+                                        <td>
+                                            {% set statusBadgeClass = {
+                                                'pending': 'bg-secondary',
+                                                'paid': 'bg-info',
+                                                'shipped': 'bg-primary',
+                                                'delivered': 'bg-success',
+                                                'cancelled': 'bg-danger'
+                                            } %}
+                                            
+                                            <span class="badge" style="{% if order.status == 'pending' %}background-color: #6c757d; color: white;{% elseif order.status == 'paid' %}background-color: var(--primary-beige); color: var(--primary-black);{% elseif order.status == 'shipped' %}background-color: var(--primary-beige-dark); color: var(--primary-black);{% elseif order.status == 'delivered' %}background-color: #d4e6d9; color: #0f5132;{% else %}background-color: #f8d7da; color: #842029;{% endif %}">
+                                                {{ order.status|capitalize }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-sm" style="background-color: var(--primary-beige-light); color: var(--primary-black);" data-bs-toggle="modal" data-bs-target="#orderModal{{ order.id }}">
+                                                    <i class="bi bi-eye"></i> View
+                                                </button>
+                                                <button type="button" class="btn btn-sm" style="background-color: var(--primary-beige); color: var(--primary-black); margin-left: 5px;" data-bs-toggle="modal" data-bs-target="#statusModal{{ order.id }}">
+                                                    <i class="bi bi-pencil"></i> Status
+                                                </button>
+                                            </div>
+                                            
+                                            <!-- Order Details Modal -->
+                                            <div class="modal fade" id="orderModal{{ order.id }}" tabindex="-1" aria-labelledby="orderModalLabel{{ order.id }}" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content" style="border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                                                        <div class="modal-header" style="background-color: var(--primary-beige); border-bottom: none;">
+                                                            <h5 class="modal-title" id="orderModalLabel{{ order.id }}" style="font-family: 'Playfair Display', serif; color: var(--primary-black);">Order Details: {{ order.reference }}</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row mb-4">
+                                                                <div class="col-md-6">
+                                                                    <h6 style="font-family: 'Playfair Display', serif;">Customer Information</h6>
+                                                                    <p>
+                                                                        <strong>Name:</strong> {{ order.user.firstName }} {{ order.user.lastName }}<br>
+                                                                        <strong>Email:</strong> {{ order.user.email }}<br>
+                                                                    </p>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <h6 style="font-family: 'Playfair Display', serif;">Order Information</h6>
+                                                                    <p>
+                                                                        <strong>Reference:</strong> {{ order.reference }}<br>
+                                                                        <strong>Date:</strong> {{ order.createdAt|date('d M Y, H:i') }}<br>
+                                                                        <strong>Status:</strong> {{ order.status|capitalize }}<br>
+                                                                        <strong>Payment Method:</strong> {{ order.paymentMethod|capitalize ?: 'Not specified' }}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <h6 style="font-family: 'Playfair Display', serif;">Shipping Address</h6>
+                                                            <p>{{ order.shippingAddress|nl2br ?: 'No shipping address provided' }}</p>
+                                                            
+                                                            <h6 style="font-family: 'Playfair Display', serif;" class="mt-4">Order Items</h6>
+                                                            <div class="table-responsive">
+                                                                <table class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Product</th>
+                                                                            <th>Price</th>
+                                                                            <th>Quantity</th>
+                                                                            <th>Subtotal</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {% for item in order.orderItems %}
+                                                                            <tr>
+                                                                                <td>{{ item.product.name }}</td>
+                                                                                <td>€{{ item.price|number_format(2, '.', ',') }}</td>
+                                                                                <td>{{ item.quantity }}</td>
+                                                                                <td>€{{ (item.price * item.quantity)|number_format(2, '.', ',') }}</td>
+                                                                            </tr>
+                                                                        {% endfor %}
+                                                                        <tr>
+                                                                            <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                                                            <td><strong>€{{ order.totalPrice|number_format(2, '.', ',') }}</strong></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn" style="background-color: var(--primary-beige); color: var(--primary-black); border: none;" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Status Update Modal -->
+                                            <div class="modal fade" id="statusModal{{ order.id }}" tabindex="-1" aria-labelledby="statusModalLabel{{ order.id }}" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content" style="border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                                                        <div class="modal-header" style="background-color: var(--primary-beige); border-bottom: none;">
+                                                            <h5 class="modal-title" id="statusModalLabel{{ order.id }}" style="font-family: 'Playfair Display', serif; color: var(--primary-black);">Update Order Status</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <form action="{{ path('app_admin_order_status_update', {'id': order.id}) }}" method="post">
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label for="status{{ order.id }}" class="form-label">Status</label>
+                                                                    <select class="form-select" id="status{{ order.id }}" name="status">
+                                                                        <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending</option>
+                                                                        <option value="paid" {% if order.status == 'paid' %}selected{% endif %}>Paid</option>
+                                                                        <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Shipped</option>
+                                                                        <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Delivered</option>
+                                                                        <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn" style="background-color: var(--primary-beige-light); color: var(--primary-black); border: none;" data-bs-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn" style="background-color: var(--primary-black); color: white; border: none;">Save Changes</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert" style="background-color: var(--primary-beige-light); color: var(--primary-black); border: none;">
+                <i class="bi bi-info-circle"></i> No orders found.
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
