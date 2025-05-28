@@ -56,17 +56,28 @@
                     </div>
                 {% endif %}
                 
-                <form action="{{ path('app_cart_add', {'id': product.id}) }}" method="get" class="d-flex align-items-center mb-4">
-                    <div class="input-group me-3" style="width: 120px;">
-                        <button class="btn" type="button" id="decrementQuantity" style="border: 1px solid var(--primary-beige); color: var(--primary-black);">-</button>
-                        <input type="number" name="quantity" class="form-control text-center" value="1" min="1" max="{{ product.stock }}" id="quantityInput" style="border: 1px solid var(--primary-beige);" {% if product.stock <= 0 %}disabled{% endif %}>
-                        <button class="btn" type="button" id="incrementQuantity" style="border: 1px solid var(--primary-beige); color: var(--primary-black);">+</button>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="d-flex mb-4">
+                        <a href="{{ path('app_admin_product_edit', {'id': product.id}) }}" class="btn" style="background-color: var(--primary-beige); color: var(--primary-black); border: none;">
+                            <i class="bi bi-pencil"></i> Edit Product
+                        </a>
+                        <a href="{{ path('app_admin_products') }}" class="btn ms-2" style="background-color: var(--primary-beige-light); color: var(--primary-black); border: none;">
+                            <i class="bi bi-arrow-left"></i> Back to Products
+                        </a>
                     </div>
-                    
-                    <button type="submit" class="btn" style="background-color: var(--primary-black); color: white; border: none;" {% if product.stock <= 0 %}disabled{% endif %}>
-                        <i class="bi bi-cart-plus"></i> Add to Cart
-                    </button>
-                </form>
+                {% else %}
+                    <form action="{{ path('app_cart_add', {'id': product.id}) }}" method="get" class="d-flex align-items-center mb-4">
+                        <div class="input-group me-3" style="width: 120px;">
+                            <button class="btn" type="button" id="decrementQuantity" style="border: 1px solid var(--primary-beige); color: var(--primary-black);">-</button>
+                            <input type="number" name="quantity" class="form-control text-center" value="1" min="1" max="{{ product.stock }}" id="quantityInput" style="border: 1px solid var(--primary-beige);" {% if product.stock <= 0 %}disabled{% endif %}>
+                            <button class="btn" type="button" id="incrementQuantity" style="border: 1px solid var(--primary-beige); color: var(--primary-black);">+</button>
+                        </div>
+                        
+                        <button type="submit" class="btn" style="background-color: var(--primary-black); color: white; border: none;" {% if product.stock <= 0 %}disabled{% endif %}>
+                            <i class="bi bi-cart-plus"></i> Add to Cart
+                        </button>
+                    </form>
+                {% endif %}
                 
                 <div class="d-flex mb-4">
                     <div class="me-4">
@@ -102,30 +113,35 @@
             const decrementBtn = document.getElementById('decrementQuantity');
             const incrementBtn = document.getElementById('incrementQuantity');
             const quantityInput = document.getElementById('quantityInput');
-            const maxStock = {{ product.stock }};
             
-            decrementBtn.addEventListener('click', function() {
-                let currentValue = parseInt(quantityInput.value);
-                if (currentValue > 1) {
-                    quantityInput.value = currentValue - 1;
-                }
-            });
-            
-            incrementBtn.addEventListener('click', function() {
-                let currentValue = parseInt(quantityInput.value);
-                if (currentValue < maxStock) {
-                    quantityInput.value = currentValue + 1;
-                }
-            });
-            
-            quantityInput.addEventListener('change', function() {
-                let currentValue = parseInt(quantityInput.value);
-                if (isNaN(currentValue) || currentValue < 1) {
-                    quantityInput.value = 1;
-                } else if (currentValue > maxStock) {
-                    quantityInput.value = maxStock;
-                }
-            });
+            // Only run this code if we're not an admin and the elements exist
+            if (decrementBtn && incrementBtn && quantityInput) {
+                const maxStock = {{ product.stock }};
+                
+                decrementBtn.addEventListener('click', function() {
+                    let currentValue = parseInt(quantityInput.value);
+                    if (currentValue > 1) {
+                        quantityInput.value = currentValue - 1;
+                    }
+                });
+                
+                incrementBtn.addEventListener('click', function() {
+                    let currentValue = parseInt(quantityInput.value);
+                    if (currentValue < maxStock) {
+                        quantityInput.value = currentValue + 1;
+                    }
+                });
+                
+                // Add the change event listener to validate input
+                quantityInput.addEventListener('change', function() {
+                    let currentValue = parseInt(quantityInput.value);
+                    if (isNaN(currentValue) || currentValue < 1) {
+                        quantityInput.value = 1;
+                    } else if (currentValue > maxStock) {
+                        quantityInput.value = maxStock;
+                    }
+                });
+            }
         });
     </script>
 {% endblock %}
